@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- I have 0 fucking idea which scripts are needed... -->
+    <!--<link rel="stylesheet"
+    href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+  <body>
+
+      <div data-role="page" id="map-page" data-theme="d" data-url="map-page">
+          <div data-role="content">
+          </div> <!-- content -->
+
+          <div id="slide-up-menu" class="slide-up-menu">
+              <span class="slide-up-button-container">
+                  <button id="filter-button" class="slide-up-button">≡</button>
+                  <button id="list-button" class="slide-up-button">⋄</button>
+                  <button id="search-button" class="slide-up-button">⊛</button>
+              </span>
+
+              <div id="search-page" class="slide-up-content">
+                  <input id="search-field"></input>
+              </div>
+
+              <div id="list-page" class="slide-up-content">
+                  <nav>
+                      <ul>
+                          <li>KTH iot</li>
+                          <li>KTH-Open</li>
+                          <li>eduram</li>
+                          <li>Tastory Open</li>
+                          <li>Starbucks Wifi</li>
+                      </ul>
+                  </nav>
+              </div>
+
+              <div id="filter-page" class="slide-up-content">
+                  <p>Filter page</p>
+              </div>
+          
+          </div>
+
+      </div> <!-- map page -->
+
+  </body>
+</html>

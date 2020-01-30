@@ -1,0 +1,65 @@
+#map-page {
+    background-image: url('../assets/openstreetmaps_kista.png');
+    overflow: hidden;
+}
+
+.slide-up-button-container {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    text-align: justify;
+    line-height: 0;
+    vertical-align: top;
+    padding: 2.5vh 0;
+}
+
+.slide-up-button {
+    border: none;
+    color: #4CAF50;
+    background: black;
+    font-size: 32px;
+}
+
+.slide-up-button-container:after {
+    content: '';
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    line-height: 1.5;
+}
+
+.slide-up-content {
+    display: none;
+}
+
+.slide-up-menu {
+    border-top: 1px solid black;
+    position: fixed;
+    width: 100vw;
+    height: 50vh;
+    color: white;
+    background: black;
+    justify-content: center;
+    bottom: -40vh;
+}
+
+.slide-up {
+    bottom: 0px !important;
+}
+
+.slide-down {
+    bottom: -40vh !important;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    color: white;
+    border: 1px solid #4CAF50;
+    border-radius: 10px;
+    vertical-align: middle;
+    width: 80vw;
+    height: 6vh;
+}
