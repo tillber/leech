@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- I have 0 fucking idea which scripts are needed... -->
+    <!--<link rel="stylesheet"
+    href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <!-- <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/main.js"></script>
+	
+	<!-- Font Awesome CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+	
+	<!-- Google Fonts OpenSans -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+      <div data-role="page" id="map-page" data-theme="d" data-url="map-page">
+          <div data-role="content">
+          </div> <!-- content -->
+
+          <div id="slide-up-menu" class="slide-up-menu">
+              <span class="slide-up-button-container">
+                  <button id="filter-button" class="slide-up-button"><i class="fas fa-sliders-h"></i></button>
+                  <button id="list-button" class="slide-up-button"><i class="far fa-plus-square"></i></button>
+                  <button id="search-button" class="slide-up-button"><i class="fas fa-search"></i></button>
+              </span>
+
+              <div id="search-page" class="slide-up-content">
+				  <b>Search for location</b><br>
+                  <input id="search-field" placeholder="Search"></input><br><br>
+				  Previous searches
+				  <ul>
+					  <li><div class="hotspot">kista</div></li>
+					  <li><div class="hotspot">stockholm</div></li>
+					  <li><div class="hotspot">budapest</div></li>
+				  </ul>
+              </div>
+
+              <div id="list-page" class="slide-up-content">
+			  <b>Nearby WiFi hotspots</b><br><br>
+                  <nav>
+                      <ul>
+                          <li><div class="hotspot"><i class="fas fa-check"></i>eduroam</div></li>
+                          <li><div class="hotspot"><i class="fas fa-wifi"></i>KTH-IoT</div></li>
+                          <li><div class="hotspot"><i class="fas fa-wifi"></i>KTHOPEN</div></li>
+                      </ul>
+                  </nav>
+				  <input id="add-button" type="button" value="Add hotspot"/>
+              </div>
+
+              <div id="filter-page" class="slide-up-content">
+                  <b>Filter settings</b><hr>
+				  <p>Average network speed: </p>
+				  <input type="range" min="0" max="100" value="50"><hr>
+				  <input type="checkbox"> Password protected
+              </div>
+          
+          </div>
+
+      </div> <!-- map page -->
+
+  </body>
+</html>
