@@ -2,6 +2,7 @@ package com.leechdev.leech;
 
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -25,20 +27,26 @@ public class WifiTesting extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final TextView myTextView = (TextView)findViewById(R.id.textView2);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        final TextView textView = (TextView)findViewById(R.id.textView);
+        Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
-                myTextView.setText(getInformation());
+                textView.setText(getConnectionInfo());
             }
         });
     }
 
+
+    private String getConnectionInfo(){
+        WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wmgr.getConnectionInfo();
+        return info.toString();
+    }
+
     //Retrieves information about nearby hotspots
-    private String getInformation(){
+    private String getHotspots(){
         WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> availNetworks = wmgr.getScanResults();
         String info = "";
