@@ -13,9 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WifiTesting extends AppCompatActivity {
@@ -27,13 +30,15 @@ public class WifiTesting extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final TextView textView = (TextView)findViewById(R.id.textView);
+        final ListView listView = (ListView)findViewById(R.id.listView);
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-                textView.setText(getConnectionInfo());
+                List<String> hotspots = getHotspots();
+                ArrayAdapter<String> itemsAdapter =
+                        new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, hotspots);
+                listView.setAdapter(itemsAdapter);
             }
         });
     }
@@ -46,19 +51,34 @@ public class WifiTesting extends AppCompatActivity {
     }
 
     //Retrieves information about nearby hotspots
-    private String getHotspots(){
+    private ArrayList<String> getHotspots(){
         WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> availNetworks = wmgr.getScanResults();
+        ArrayList<String> hotspots = new ArrayList<>();
         String info = "";
 
         if (availNetworks.size() > 0) {
-
             for (int i=0; i<availNetworks.size();i++) {
-                info += availNetworks.get(i).toString() + "\n\n";
-            }
+                String capabilities = availNetworks.get(i).capabilities;
+                int level = WifiManager.calculateSignalLevel(availNetworks.get(i).level, 5);
+                String security = "";
 
+                if (capabilities.toUpperCase().contains("WEP")) {
+                    // WEP Network
+                    security = "Secured (WEP)";
+                } else if (capabilities.toUpperCase().contains("WPA")
+                        || capabilities.toUpperCase().contains("WPA2")) {
+                    // WPA or WPA2 Network
+                    security = "Secured (WPA/WPA2)";
+                } else {
+                    // Open Network
+                    security = "Open";
+                }
+
+                hotspots.add(availNetworks.get(i).SSID + ", level: " + level + ", security: " + security + "\n\n");
+            }
         }
 
-        return info;
+        return hotspots;
     }
 }
