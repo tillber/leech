@@ -57,26 +57,24 @@ public class WifiTesting extends AppCompatActivity {
         ArrayList<String> hotspots = new ArrayList<>();
         String info = "";
 
-        if (availNetworks.size() > 0) {
-            for (int i=0; i<availNetworks.size();i++) {
-                String capabilities = availNetworks.get(i).capabilities;
-                int level = WifiManager.calculateSignalLevel(availNetworks.get(i).level, 5);
-                String security = "";
+        for (ScanResult result : availNetworks) {
+            String capabilities = result.capabilities;
+            int level = WifiManager.calculateSignalLevel(result.level, 5);
+            String security = "";
 
-                if (capabilities.toUpperCase().contains("WEP")) {
-                    // WEP Network
-                    security = "Secured (WEP)";
-                } else if (capabilities.toUpperCase().contains("WPA")
-                        || capabilities.toUpperCase().contains("WPA2")) {
-                    // WPA or WPA2 Network
-                    security = "Secured (WPA/WPA2)";
-                } else {
-                    // Open Network
-                    security = "Open";
-                }
-
-                hotspots.add(availNetworks.get(i).SSID + ", level: " + level + ", security: " + security + "\n\n");
+            if (capabilities.toUpperCase().contains("WEP")) {
+                // WEP Network
+                security = "Secured (WEP)";
+            } else if (capabilities.toUpperCase().contains("WPA")
+                    || capabilities.toUpperCase().contains("WPA2")) {
+                // WPA or WPA2 Network
+                security = "Secured (WPA/WPA2)";
+            } else {
+                // Open Network
+                security = "Open";
             }
+
+            hotspots.add(result.SSID + ", level: " + level + ", security: " + security + "\n\n");
         }
 
         return hotspots;
