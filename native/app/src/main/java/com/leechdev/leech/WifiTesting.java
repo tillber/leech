@@ -65,10 +65,22 @@ public class WifiTesting extends AppCompatActivity {
         ArrayList<HotspotItem> hotspots = new ArrayList<>();
         String info = "";
 
+        scanresults:
         for (ScanResult result : availNetworks) {
             String capabilities = result.capabilities;
             int level = WifiManager.calculateSignalLevel(result.level, 5);
             String security = "";
+
+            for(HotspotItem item : hotspots){
+                if(item.getSsid().equals(result.SSID)){
+                    if(item.getLevel() > level){
+                        break scanresults;
+                    }else{
+                        hotspots.remove(item);
+                        break;
+                    }
+                }
+            }
 
             if (capabilities.toUpperCase().contains("WEP")) {
                 // WEP Network
