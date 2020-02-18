@@ -35,9 +35,9 @@ public class WifiTesting extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                List<String> hotspots = getHotspots();
-                ArrayAdapter<String> itemsAdapter =
-                        new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, hotspots);
+                ArrayList<HotspotItem> hotspots = getHotspots();
+                CustomAdapter itemsAdapter =
+                        new CustomAdapter(R.layout.hotspot_item, hotspots, getApplicationContext());
                 listView.setAdapter(itemsAdapter);
             }
         });
@@ -51,10 +51,10 @@ public class WifiTesting extends AppCompatActivity {
     }
 
     //Retrieves information about nearby hotspots
-    private ArrayList<String> getHotspots(){
+    private ArrayList<HotspotItem> getHotspots(){
         WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> availNetworks = wmgr.getScanResults();
-        ArrayList<String> hotspots = new ArrayList<>();
+        ArrayList<HotspotItem> hotspots = new ArrayList<>();
         String info = "";
 
         for (ScanResult result : availNetworks) {
@@ -74,7 +74,8 @@ public class WifiTesting extends AppCompatActivity {
                 security = "Open";
             }
 
-            hotspots.add(result.SSID + ", level: " + level + ", security: " + security + "\n\n");
+            HotspotItem hotspot = new HotspotItem(result.SSID, level, security);
+            hotspots.add(hotspot);
         }
 
         return hotspots;
