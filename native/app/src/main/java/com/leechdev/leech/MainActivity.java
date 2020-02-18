@@ -1,35 +1,36 @@
 package com.leechdev.leech;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-//import android.location.Location;
-//import android.location.LocationListener;
-//import android.location.LocationManager;
-//import android.location.LocationProvider;
-import android.os.Bundle;
-import android.os.Build;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
-//import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
-//import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-//import org.osmdroid.util.GeoPoint;
-//import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     private static final int PERMISSION_MULTI_REQUEST = 0xBEEF;
-    private static String[] permissions;
+    private static final String[] permissions = new String[] {
+        Manifest.permission.INTERNET,
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.CHANGE_WIFI_STATE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     private static boolean permissionGranted = false;
+    private static MapViewController map;
 
     @Override
     public void onRequestPermissionsResult(int reqCode, String[] permissions, int[] grants) {
@@ -81,34 +82,28 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Context ctx = getApplicationContext();
 
-        this.permissions = new String[] {
-            Manifest.permission.INTERNET,
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_WIFI_STATE,
-            Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
+        // Set OSMDroid configuration before the view is inflated.
+        Context ctx = this.getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        //Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        setContentView(R.layout.activity_main);
 
         // Request all permissions
         if (Build.VERSION.SDK_INT >= 23)
             this.requestPermissions(this.permissions, this.PERMISSION_MULTI_REQUEST);
 
-        //inflate and create the map
-        setContentView(R.layout.activity_main);
+        // Create the map
+        this.map = new MapViewController(this, (MapView)findViewById(R.id.map));
     }
 
     public void onResume() {
         super.onResume();
-        //map.onResume();
+        map.onResume();
     }
 
     public void onPause() {
         super.onPause();
-        //map.onPause();
+        map.onPause();
     }
 }
