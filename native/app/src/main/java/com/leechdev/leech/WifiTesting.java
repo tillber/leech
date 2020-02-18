@@ -19,7 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class WifiTesting extends AppCompatActivity {
 
@@ -53,7 +55,13 @@ public class WifiTesting extends AppCompatActivity {
     //Retrieves information about nearby hotspots
     private ArrayList<HotspotItem> getHotspots(){
         WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        List<ScanResult> availNetworks = wmgr.getScanResults();
+        //List<ScanResult> availNetworks = wmgr.getScanResults();
+
+        //Supposed to remove duplicates of hotspots
+        List<ScanResult> raw_wifi_scan_list = wmgr.getScanResults();
+        Set<ScanResult> unique_wifi_scan_set = new HashSet(raw_wifi_scan_list);
+        List<ScanResult> availNetworks = new ArrayList(unique_wifi_scan_set);
+
         ArrayList<HotspotItem> hotspots = new ArrayList<>();
         String info = "";
 
