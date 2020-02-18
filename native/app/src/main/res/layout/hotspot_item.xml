@@ -15,7 +15,6 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:paddingLeft="10dp"
             android:text="SSID"
             android:textAlignment="textStart" />
@@ -33,7 +32,6 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:paddingRight="10dp"
             android:text="Level"
             android:textAlignment="textEnd" />
