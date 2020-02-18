@@ -36,12 +36,13 @@
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_height="400dp"
             android:layout_marginTop="100dp"
-            android:layout_marginRight="20dp"
             android:layout_marginBottom="100dp"
-            android:visibility="visible" />
+            android:background="@android:color/holo_blue_light"
+            android:visibility="visible" >
+
+        </ListView>
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
