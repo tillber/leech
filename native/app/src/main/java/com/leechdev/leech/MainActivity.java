@@ -14,23 +14,22 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.views.MapView;
 
-import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     private static final int PERMISSION_MULTI_REQUEST = 0xBEEF;
     private static final String[] permissions = new String[] {
         Manifest.permission.INTERNET,
-        Manifest.permission.ACCESS_NETWORK_STATE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private static boolean permissionGranted = false;
-    private static MapViewController map;
+    private static MapViewController mapViewController;
 
     @Override
     public void onRequestPermissionsResult(int reqCode, String[] permissions, int[] grants) {
@@ -50,6 +49,10 @@ public class MainActivity extends Activity {
                 return;
 
         this.permissionGranted = true;
+
+        this.mapViewController.setPermissionGranted(true);
+        this.mapViewController.startLocationUpdates();
+
         return;
     }
 
@@ -94,21 +97,16 @@ public class MainActivity extends Activity {
             this.requestPermissions(this.permissions, this.PERMISSION_MULTI_REQUEST);
 
         // Create the map
-        this.map = new MapViewController(this, (MapView)findViewById(R.id.map));
-    }
-
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        this.map.requestLocation(this);
+        this.mapViewController = new MapViewController(this, (org.osmdroid.views.MapView)findViewById(R.id.map));
     }
 
     public void onResume() {
         super.onResume();
-        map.onResume();
+        mapViewController.onResume();
     }
 
     public void onPause() {
         super.onPause();
-        map.onPause();
+        mapViewController.onPause();
     }
 }

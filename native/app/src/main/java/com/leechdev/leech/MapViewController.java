@@ -1,7 +1,9 @@
 package com.leechdev.leech;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.Binder;
 import android.os.Bundle;
 import android.provider.Settings;
 
@@ -19,99 +22,116 @@ import org.osmdroid.views.MapView;
 
 import android.util.Log;
 
-public class MapViewController {
+public class MapViewController implements LocationListener {
     private static final double MAP_DEFAULT_ZOOM = 18.0;
 
-    private LocationManager locationMgr;
     private IMapController mapController;
-    private MapView mapView;
+    private org.osmdroid.views.MapView mapView;
+    private Context ctx;
 
+    private boolean permissionGranted = false;
     private boolean followTarget = true;
-    private double longitude, latitude;
-
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location loc) {
-            longitude = loc.getLongitude();
-            latitude = loc.getLatitude();
-
-            Log.d("GPS", "long: " + longitude + " lat: " + latitude);
-
-            if (followTarget) {
-                GeoPoint pos = new GeoPoint(latitude, longitude);
-                mapController.setCenter(pos);
-            }
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.d("GPS", "DISABLED");
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.d("GPS", "ENABLED");
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.d("GPS", "CHANGED");
-        }
-    };
+    private GeoPoint location = new GeoPoint(0,0);
 
 
-    public MapViewController(Activity act, MapView mapView) {
+
+    public MapViewController(Context ctx, org.osmdroid.views.MapView mapView) {
+        this.ctx = ctx;
         this.mapView = mapView;
         this.mapView.setTileSource(TileSourceFactory.MAPNIK);
         this.mapView.setMultiTouchControls(true);
 
         this.mapController = this.mapView.getController();
         this.mapController.setZoom(this.MAP_DEFAULT_ZOOM);
-
-        this.locationMgr = (LocationManager) act.getSystemService(Context.LOCATION_SERVICE);
     }
 
-    public void requestLocation(final Activity act) {
-      //if (!this.locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-      //    new AlertDialog.Builder(act.getApplicationContext())
-      //        .setTitle("Enable location")
-      //        .setMessage("Your GPS is turned off.")
-      //        .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-      //                @Override
-      //                public void onClick(DialogInterface dialog, int which) {
-      //                    Intent gpsSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-      //             parent    act.startActivity(gpsSettings);
-      //                }
-      //            })
-      //        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-      //                @Override
-      //                public void onClick(DialogInterface dialog, int which) {
-      //                    dialog.cancel();
-      //                }
-      //            })
-      //        .show();
-      //}
+    public void setPermissionGranted(boolean permissionGranted) {
+        this.permissionGranted = permissionGranted;
+    }
 
+    public void startLocationUpdates() {
+        if (!this.permissionGranted)
+            return;
+
+        LocationManager lm = (LocationManager) this.ctx.getSystemService(this.ctx.LOCATION_SERVICE);
         try {
-        	this.locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this.locationListener);
-          //Location loc = this.locationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-          //this.mapController.setCenter(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, this);
         } catch (SecurityException e) {
-
+            Log.e(this.getClass().getName(), e.toString());
+        } catch (IllegalArgumentException e) {
+            Log.e(this.getClass().getName(), e.toString());
         }
     }
 
-    public double getLongitude() { return this.longitude; }
-    public double getLatitude() { return this.latitude; }
+    public void stopLocationUpdates() {
+        if (!this.permissionGranted)
+            return;
+
+        LocationManager lm = (LocationManager) this.ctx.getSystemService(this.ctx.LOCATION_SERVICE);
+        try {
+            lm.removeUpdates(this);
+        } catch (SecurityException e) {
+            Log.e(this.getClass().getName(), e.toString());
+        } catch (IllegalArgumentException e) {
+            Log.e(this.getClass().getName(), e.toString());
+        }
+    }
+
+    public void getLastKnownLocation() {
+        LocationManager lm = (LocationManager) this.ctx.getSystemService(this.ctx.LOCATION_SERVICE);
+
+        try {
+            Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            this.onLocationChanged(loc);
+        } catch (SecurityException e)  {
+            Log.e(this.getClass().getName(), e.toString());
+        } catch (IllegalArgumentException e) {
+            Log.e(this.getClass().getName(), e.toString());
+        }
+    }
+
+    public double getLongitude() { return this.location.getLongitude(); }
+    public double getLatitude() { return this.location.getLatitude(); }
 
     public boolean setFollowTarget() { return this.followTarget; }
     public void setFollowTarget(boolean follow) { this.followTarget = follow; }
 
     public void onResume() {
+        this.startLocationUpdates();
         this.mapView.onResume();
     }
 
     public void onPause() {
+        this.stopLocationUpdates();
         this.mapView.onPause();
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location == null) {
+            Log.d("GPS-LOCATION", "null");
+            return;
+        }
+
+        Log.d("GPS-LOCATION", "lat: " + location.getLatitude() + " long: " + location.getLongitude());
+        this.location.setCoords(location.getLatitude(), location.getLongitude());
+        this.mapController.setCenter(this.location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("GPS-LOCATION", provider + ": " + status);
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("GPS-LOCATION", provider + ": enabled");
+        this.getLastKnownLocation();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("GPS-LOCATION", provider + ": disabled");
+    }
+
 }
