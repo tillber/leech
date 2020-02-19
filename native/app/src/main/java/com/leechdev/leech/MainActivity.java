@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
     private static final String[] permissions = new String[] {
         Manifest.permission.INTERNET,
         Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.CHANGE_WIFI_STATE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -95,6 +95,11 @@ public class MainActivity extends Activity {
 
         // Create the map
         this.map = new MapViewController(this, (MapView)findViewById(R.id.map));
+    }
+
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        this.map.requestLocation(this);
     }
 
     public void onResume() {
