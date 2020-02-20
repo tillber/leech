@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,12 +74,8 @@ public class WifiTesting extends AppCompatActivity {
 
             for(HotspotItem item : hotspots){
                 if(item.getSsid().equals(result.SSID)){
-                    if(item.getLevel() > level){
-                        break scanresults;
-                    }else{
-                        hotspots.remove(item);
-                        break;
-                    }
+                    hotspots.remove(item);
+                    break;
                 }
             }
 
@@ -98,6 +95,7 @@ public class WifiTesting extends AppCompatActivity {
             hotspots.add(hotspot);
         }
 
+        Collections.sort(hotspots, new NameSorter());
         return hotspots;
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:id="@+id/hotspot_item"
     android:layout_height="40dp">
@@ -8,7 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp">
 
         <TextView
             android:id="@+id/ssid"
@@ -27,14 +31,22 @@
             android:gravity="center"
             android:text="Security" />
 
-        <TextView
-            android:id="@+id/level"
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingRight="10dp"
-            android:text="Level"
-            android:textAlignment="textEnd" />
+            android:textAlignment="textEnd">
+
+            <ImageView
+                android:id="@+id/level"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                app:srcCompat="@color/colorPrimary" />
+        </RelativeLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
