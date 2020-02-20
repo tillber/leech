@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,6 +20,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 
 import android.util.Log;
 
@@ -31,7 +33,8 @@ public class MapViewController implements LocationListener {
 
     private boolean permissionGranted = false;
     private boolean followTarget = true;
-    private GeoPoint location = new GeoPoint(0,0);
+    private GeoPoint location = new GeoPoint(0d,0d);
+    private Marker locationMarker;
 
 
 
@@ -43,6 +46,11 @@ public class MapViewController implements LocationListener {
 
         this.mapController = this.mapView.getController();
         this.mapController.setZoom(this.MAP_DEFAULT_ZOOM);
+
+        this.locationMarker = new Marker(this.mapView);
+        this.locationMarker.setIcon(this.ctx.getResources().getDrawable(R.drawable.ic_location_marker, null));
+        this.locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+        this.mapView.getOverlays().add(this.locationMarker);
     }
 
     public void setPermissionGranted(boolean permissionGranted) {
@@ -114,8 +122,10 @@ public class MapViewController implements LocationListener {
         }
 
         Log.d("GPS-LOCATION", "lat: " + location.getLatitude() + " long: " + location.getLongitude());
+        
         this.location.setCoords(location.getLatitude(), location.getLongitude());
-        this.mapController.setCenter(this.location);
+        this.locationMarker.setPosition(this.location);
+        this.mapController.animateTo(this.location);
     }
 
     @Override
