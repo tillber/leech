@@ -12,11 +12,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.osmdroid.config.Configuration;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_MULTI_REQUEST = 0xBEEF;
     private static final String[] permissions = new String[] {
         Manifest.permission.INTERNET,
@@ -96,9 +104,41 @@ public class MainActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 23)
             this.requestPermissions(this.permissions, this.PERMISSION_MULTI_REQUEST);
 
+        //create the bottom menu
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        //create listener for clicked items in the menu
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
         // Create the map
         this.mapViewController = new MapViewController(this, (org.osmdroid.views.MapView)findViewById(R.id.map));
+
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            Fragment selectedFragment = null;
+            switch (menuItem.getItemId()){
+                case(R.id.nav_add_hotspot):
+                    selectedFragment = new AddHotspotFragment();
+                    break;
+                case(R.id.nav_map):
+                    selectedFragment = new MapBackFragment();
+                    break;
+
+                case(R.id.nav_nearby):
+                    selectedFragment = new NearbyHotspotsFragment();
+                    break;
+            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit();
+            return true;
+        }
+    };
 
     public void onResume() {
         super.onResume();
