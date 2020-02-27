@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_add_hotspot"
+        android:icon="@drawable/sharp_add_black_36"
+        android:title="Add"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="Map"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/nav_nearby"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:title="Nearby"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
 
 </menu>
