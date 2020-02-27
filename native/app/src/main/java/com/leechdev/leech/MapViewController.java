@@ -48,7 +48,7 @@ public class MapViewController implements LocationListener {
         this.mapController.setZoom(this.MAP_DEFAULT_ZOOM);
 
         this.locationMarker = new Marker(this.mapView);
-        this.locationMarker.setIcon(this.ctx.getResources().getDrawable(R.drawable.ic_location_marker, null));
+        this.locationMarker.setIcon(this.ctx.getResources().getDrawable(R.drawable.ic_leech, null));
         this.locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
         this.mapView.getOverlays().add(this.locationMarker);
     }

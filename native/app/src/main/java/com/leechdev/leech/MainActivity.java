@@ -1,7 +1,6 @@
 package com.leechdev.leech;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -112,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Create the map
         this.mapViewController = new MapViewController(this, (org.osmdroid.views.MapView)findViewById(R.id.map));
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
