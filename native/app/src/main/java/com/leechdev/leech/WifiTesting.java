@@ -56,17 +56,9 @@ public class WifiTesting extends AppCompatActivity {
     //Retrieves information about nearby hotspots
     private ArrayList<HotspotItem> getHotspots(){
         WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        //List<ScanResult> availNetworks = wmgr.getScanResults();
-
-        //Supposed to remove duplicates of hotspots
-        List<ScanResult> raw_wifi_scan_list = wmgr.getScanResults();
-        Set<ScanResult> unique_wifi_scan_set = new HashSet(raw_wifi_scan_list);
-        List<ScanResult> availNetworks = new ArrayList(unique_wifi_scan_set);
-
+        List<ScanResult> availNetworks = wmgr.getScanResults();
         ArrayList<HotspotItem> hotspots = new ArrayList<>();
-        String info = "";
 
-        scanresults:
         for (ScanResult result : availNetworks) {
             String capabilities = result.capabilities;
             int level = WifiManager.calculateSignalLevel(result.level, 5);
