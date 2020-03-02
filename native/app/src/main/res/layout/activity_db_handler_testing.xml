@@ -65,4 +65,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HotspotLong" />
+
+    <Button
+        android:id="@+id/buttonGetHotspot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="137dp"
+        android:layout_marginBottom="102dp"
+        android:text="get Hotspots"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonAddHospot"
+        app:layout_constraintTop_toBottomOf="@+id/HotspotLong" />
 </androidx.constraintlayout.widget.ConstraintLayout>
