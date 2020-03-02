@@ -29,28 +29,13 @@ public class WifiTesting extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi_testing);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.fragment_nearby_hotspots);
 
         final ListView listView = (ListView)findViewById(R.id.listView);
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                ArrayList<HotspotItem> hotspots = getHotspots();
-                CustomAdapter itemsAdapter =
-                        new CustomAdapter(R.layout.hotspot_item, hotspots, getApplicationContext());
-                listView.setAdapter(itemsAdapter);
-            }
-        });
-    }
-
-
-    private String getConnectionInfo(){
-        WifiManager wmgr = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wmgr.getConnectionInfo();
-        return info.toString();
+        ArrayList<HotspotItem> hotspots = getHotspots();
+        CustomAdapter itemsAdapter =
+                new CustomAdapter(R.layout.hotspot_item, hotspots, getApplicationContext());
+        listView.setAdapter(itemsAdapter);
     }
 
     //Retrieves information about nearby hotspots
