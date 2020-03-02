@@ -21,8 +21,12 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class MapViewController implements LocationListener {
     private static final double MAP_DEFAULT_ZOOM = 18.0;
@@ -34,6 +38,7 @@ public class MapViewController implements LocationListener {
     private boolean permissionGranted = false;
     private boolean followTarget = true;
     private GeoPoint location = new GeoPoint(0d,0d);
+    private GeoPoint homingLocation = new GeoPoint(0d,0d);
     private Marker locationMarker;
 
 
@@ -51,6 +56,34 @@ public class MapViewController implements LocationListener {
         this.locationMarker.setIcon(this.ctx.getResources().getDrawable(R.drawable.ic_leech, null));
         this.locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
         this.mapView.getOverlays().add(this.locationMarker);
+    }
+
+    public void loadHotspotPois() {
+        DbHandler dbh = new DbHandler(this.ctx);
+
+        ArrayList<Hotspot> hotspots = dbh.getAllHotspots();
+
+        for (Hotspot hotspot : hotspots) {
+            double latitude = Double.parseDouble(hotspot.getHotspot_lat());
+            double longitude = Double.parseDouble(hotspot.getHotspot_long());
+            GeoPoint poiLoc = new GeoPoint(latitude, longitude);
+            Marker poi = new Marker(this.mapView);
+
+            poi.setIcon(this.ctx.getResources().getDrawable(R.drawable.ic_location_marker, null));
+            poi.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+            poi.setTitle(hotspot.getHotspot_name());
+            poi.setPosition(poiLoc);
+
+            this.mapView.getOverlays().add(poi);
+        }
+    }
+
+    public GeoPoint getCurrentLocation() {
+        return this.location;
+    }
+
+    public void homeOnLocation() {
+        this.mapController.animateTo(this.location);
     }
 
     public void setPermissionGranted(boolean permissionGranted) {
@@ -122,10 +155,15 @@ public class MapViewController implements LocationListener {
         }
 
         Log.d("GPS-LOCATION", "lat: " + location.getLatitude() + " long: " + location.getLongitude());
-        
-        this.location.setCoords(location.getLatitude(), location.getLongitude());
+
+        this.homingLocation.setCoords(location.getLatitude(), location.getLongitude());
+        if (this.location.distanceToAsDouble(this.homingLocation) > 0.001) {
+            this.location.setCoords(location.getLatitude(), location.getLongitude());
+            this.homeOnLocation();
+        }
+
         this.locationMarker.setPosition(this.location);
-        this.mapController.animateTo(this.location);
+
     }
 
     @Override

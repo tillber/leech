@@ -16,6 +16,12 @@ public class AddHotspotFragment extends Fragment {
     DbHandler leechDB;
     EditText editHotspotName, editHotspotLat, editHotspotLong;
     Button btnAddHotspot, btnGetHotspots;
+    double latitude, longitude;
+
+    public AddHotspotFragment(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     @NonNull
     @Override
@@ -29,6 +35,10 @@ public class AddHotspotFragment extends Fragment {
         editHotspotLong = view.findViewById(R.id.HotspotLong);
         btnAddHotspot = view.findViewById(R.id.buttonAddHospot);
         btnGetHotspots = view.findViewById(R.id.buttonGetHotspot);
+
+        editHotspotLat.setText(String.format("%.6f", this.latitude));
+        editHotspotLong.setText(String.format("%.6f", this.longitude));
+
         AddHotspot();
 
         return view;

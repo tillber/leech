@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -118,10 +119,13 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
             switch (menuItem.getItemId()){
                 case(R.id.nav_add_hotspot):
-                    selectedFragment = new AddHotspotFragment();
+                    GeoPoint curLoc = mapViewController.getCurrentLocation();
+                    selectedFragment = new AddHotspotFragment(curLoc.getLatitude(), curLoc.getLongitude());
                     break;
                 case(R.id.nav_map):
                     selectedFragment = new MapBackFragment();
+                    mapViewController.loadHotspotPois();
+                    mapViewController.homeOnLocation();
                     break;
 
                 case(R.id.nav_nearby):
