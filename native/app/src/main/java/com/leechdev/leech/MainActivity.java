@@ -1,7 +1,6 @@
 package com.leechdev.leech;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,16 +11,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.views.MapView;
 
-import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_MULTI_REQUEST = 0xBEEF;
     private static final String[] permissions = new String[] {
         Manifest.permission.INTERNET,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_NETWORK_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_WIFI_STATE,
@@ -30,7 +35,7 @@ public class MainActivity extends Activity {
     };
 
     private static boolean permissionGranted = false;
-    private static MapViewController map;
+    private static MapViewController mapViewController;
 
     @Override
     public void onRequestPermissionsResult(int reqCode, String[] permissions, int[] grants) {
@@ -50,6 +55,10 @@ public class MainActivity extends Activity {
                 return;
 
         this.permissionGranted = true;
+
+        this.mapViewController.setPermissionGranted(true);
+        this.mapViewController.startLocationUpdates();
+
         return;
     }
 
@@ -93,17 +102,48 @@ public class MainActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 23)
             this.requestPermissions(this.permissions, this.PERMISSION_MULTI_REQUEST);
 
+        //create the bottom menu
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        //create listener for clicked items in the menu
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
         // Create the map
-        this.map = new MapViewController(this, (MapView)findViewById(R.id.map));
+        this.mapViewController = new MapViewController(this, (org.osmdroid.views.MapView)findViewById(R.id.map));
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            Fragment selectedFragment = null;
+            switch (menuItem.getItemId()){
+                case(R.id.nav_add_hotspot):
+                    selectedFragment = new AddHotspotFragment();
+                    break;
+                case(R.id.nav_map):
+                    selectedFragment = new MapBackFragment();
+                    break;
+
+                case(R.id.nav_nearby):
+                    selectedFragment = new NearbyHotspotsFragment();
+                    break;
+            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit();
+            return true;
+        }
+    };
 
     public void onResume() {
         super.onResume();
-        map.onResume();
+        mapViewController.onResume();
     }
 
     public void onPause() {
         super.onPause();
-        map.onPause();
+        mapViewController.onPause();
     }
 }
